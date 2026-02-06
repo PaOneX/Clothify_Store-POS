@@ -1,5 +1,6 @@
 package edu.icet.model.dto;
 
+import com.sun.scenario.effect.impl.prism.PrImage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,10 @@ import lombok.ToString;
 @ToString
 public class ProductDto {
     private Integer id;
-    private Integer category;
+    private String productName;
     private String description;
+    private Double price;
+    private Integer qty;
+    private Integer supplierId;
+    private Integer category;
 }
