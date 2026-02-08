@@ -6,16 +6,16 @@ import edu.icet.repository.ProductRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
+
 
 public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void addProduct(ProductDto productDto) {
-        Connection connection = null;
         try {
-            connection = DBConnection.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Products " +
+            Connection connection = DBConnection.getInstance().getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO products " +
                     "(product_name, description, price, qty_on_hand, category_id," +
                     " supplier_id) VALUES (?,?,?,?,?,?)");
 
@@ -44,7 +44,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<ProductDto> getProducts() {
-        return List.of();
+    public ResultSet getProducts() throws SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM products");
+        return preparedStatement.executeQuery();
     }
 }

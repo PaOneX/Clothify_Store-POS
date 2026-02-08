@@ -1,14 +1,21 @@
 package edu.icet.service.Impl;
 
 import edu.icet.model.dto.ProductDto;
+import edu.icet.repository.Iml.ProductRepositoryImpl;
+import edu.icet.repository.ProductRepository;
 import edu.icet.service.ProductService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
+    ProductRepository repository =new ProductRepositoryImpl();
     @Override
-    public void addProduct(ProductDto productDto) {
-
+    public void addProduct(ProductDto productDto) throws Exception {
+        repository.addProduct(productDto);
     }
 
     @Override
@@ -22,7 +29,26 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> getProducts() {
-        return List.of();
+    public ObservableList<ProductDto> getAllProducts() {
+        ObservableList<ProductDto> products = FXCollections.observableArrayList();
+        try {
+            ResultSet resultSet = repository.getProducts();
+            while (resultSet.next()) {
+                products.add(new ProductDto(
+                        resultSet.getInt("product_id"),
+                        resultSet.getString("product_name"),
+                        resultSet.getString("description"),
+                        resultSet.getDouble("price"),
+                        resultSet.getInt("qty_on_hand"),
+                        resultSet.getInt("category_id"),
+                        resultSet.getInt("supplier_id")
+                ));
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return products;
     }
 }
