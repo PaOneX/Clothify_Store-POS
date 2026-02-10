@@ -38,6 +38,17 @@ public class DashboardController {
            e.printStackTrace();
         }
     }
+    @FXML
+    public void btnAddSupplier(ActionEvent actionEvent) {
+        try {
+            stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/Supplier_Management.fxml"))));
+            stage.show();
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
 
 
