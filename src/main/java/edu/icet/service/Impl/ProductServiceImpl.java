@@ -24,8 +24,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct(Integer id) {
-
+    public void deleteProduct(Integer id) throws Exception {
+        repository.deleteProduct(id);
     }
 
     @Override
@@ -40,8 +40,8 @@ public class ProductServiceImpl implements ProductService {
                         resultSet.getString("description"),
                         resultSet.getDouble("price"),
                         resultSet.getInt("qty_on_hand"),
-                        resultSet.getInt("category_id"),
-                        resultSet.getInt("supplier_id")
+                        resultSet.getInt("supplier_id"),
+                        resultSet.getInt("category_id")
                 ));
             }
         } catch (RuntimeException e) {

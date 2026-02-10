@@ -8,6 +8,6 @@ import java.util.List;
 public interface ProductService {
     void addProduct(ProductDto productDto) throws Exception;
     void editProduct(ProductDto productDto);
-    void deleteProduct(Integer id);
+    void deleteProduct(Integer id) throws Exception;
     ObservableList<ProductDto> getAllProducts();
 }

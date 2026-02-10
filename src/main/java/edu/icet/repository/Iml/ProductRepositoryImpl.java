@@ -39,7 +39,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public void deleteProduct(Integer id) {
+    public void deleteProduct(Integer id) throws Exception {
+
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM products WHERE product_id = ?");
+        preparedStatement.setObject(1, id);
+        preparedStatement.executeUpdate();
 
     }
 

@@ -9,6 +9,6 @@ import java.util.List;
 public interface ProductRepository {
     void   addProduct(ProductDto productDto) throws Exception;
     void   editProduct(ProductDto productDto);
-    void   deleteProduct(Integer id);
+    void   deleteProduct(Integer id) throws Exception;
    ResultSet getProducts() throws SQLException;
 }

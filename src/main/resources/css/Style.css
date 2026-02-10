@@ -1,0 +1,167 @@
+
+
+/* ======================================
+   BUTTON STYLES
+   ====================================== */
+
+/* General Button styling */
+.button {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-text-fill: white;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 4, 0, 0, 1);
+}
+
+/* Add button - Green */
+.button.add-btn {
+    -fx-background-color: #4caf50;
+}
+
+.button.add-btn:hover {
+    -fx-background-color: #45a049;
+}
+
+.button.add-btn:pressed {
+    -fx-background-color: #388e3c;
+}
+
+/* Update button - Blue */
+.button.update-btn {
+    -fx-background-color: #2196f3;
+}
+
+.button.update-btn:hover {
+    -fx-background-color: #1976d2;
+}
+
+.button.update-btn:pressed {
+    -fx-background-color: #1565c0;
+}
+
+/* Delete button - Red */
+.button.delete-btn {
+    -fx-background-color: #f44336;
+}
+
+.button.delete-btn:hover {
+    -fx-background-color: #da190b;
+}
+
+.button.delete-btn:pressed {
+    -fx-background-color: #ba0000;
+}
+
+/* Clear button - Gray */
+.button.clear-btn {
+    -fx-background-color: #757575;
+}
+
+.button.clear-btn:hover {
+    -fx-background-color: #616161;
+}
+
+.button.clear-btn:pressed {
+    -fx-background-color: #424242;
+}
+
+/* Info buttons (Supplier, Category) - Orange */
+.button.info-btn {
+    -fx-background-color: #ff9800;
+}
+
+.button.info-btn:hover {
+    -fx-background-color: #f57c00;
+}
+
+.button.info-btn:pressed {
+    -fx-background-color: #e65100;
+}
+
+/* Dashboard navigation buttons */
+.button.nav-btn {
+    -fx-background-color: #1565c0;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 15px 30px;
+}
+
+.button.nav-btn:hover {
+    -fx-background-color: #1e88e5;
+}
+
+.button.nav-btn:pressed {
+    -fx-background-color: #0d47a1;
+}
+
+/* ======================================
+   TEXT FIELD & TEXTAREA STYLES
+   ====================================== */
+
+.text-field,
+.text-area {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 13px;
+    -fx-padding: 8px;
+    -fx-border-color: #bdbdbd;
+    -fx-border-radius: 3px;
+    -fx-border-width: 1;
+    -fx-control-inner-background: #ffffff;
+    -fx-text-fill: #212121;
+}
+
+.text-field:focused,
+.text-area:focused {
+    -fx-border-color: #1976d2;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, rgba(25, 118, 210, 0.4), 5, 0, 0, 0);
+}
+
+.text-field:prompt-text {
+    -fx-text-fill: #757575;
+}
+
+.text-area:prompt-text {
+    -fx-text-fill: #757575;
+}
+
+/* ======================================
+   ANCHOR PANE BACKGROUND
+   ====================================== */
+
+.anchor-pane {
+    -fx-background-color: #fafafa;
+    -fx-padding: 15px;
+}
+
+/* Product Management Page */
+.product-management {
+    -fx-background-color: #ffffff;
+    -fx-padding: 20px;
+    -fx-border-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 3, 0, 0, 1);
+}
+
+/* ======================================
+   TEXT STYLES
+   ====================================== */
+
+.text {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-fill: #212121;
+}
+
+/* Page Title styling */
+.page-title {
+    -fx-font-family: "Malgun Gothic Bold", Arial, sans-serif;
+    -fx-font-size: 31px;
+    -fx-fill: #1565c0;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 3, 0, 0, 1);
+}
+

@@ -128,12 +128,24 @@ public class ProductController implements Initializable {
 
     @FXML
     void btnClear(ActionEvent event) {
+        clearFields();
+        loadAllProducts();
+    }
 
+    private void clearFields() {
+        txtId.clear();
+        txtName.clear();
+        txtdesc.clear();
+        txtPrice.clear();
+        txtQty.clear();
+        txtSupplier.clear();
+        txtCategory.clear();
     }
 
     @FXML
-    void btnDeleteProduct(ActionEvent event) {
-
+    void btnDeleteProduct(ActionEvent event) throws Exception{
+        service.deleteProduct(Integer.valueOf(txtId.getText()));
+        loadAllProducts();
     }
 
     @FXML
