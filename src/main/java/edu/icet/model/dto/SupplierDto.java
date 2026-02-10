@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class SupplierDto {
-    private Integer id;
+    private String id;
     private String name;
     private String contact;
     private String email;

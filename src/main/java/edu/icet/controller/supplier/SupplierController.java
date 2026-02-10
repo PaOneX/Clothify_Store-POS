@@ -3,6 +3,8 @@ package edu.icet.controller.supplier;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import edu.icet.model.dto.SupplierDto;
+import edu.icet.service.Impl.SupplierServiceImpl;
+import edu.icet.service.SupplierService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,14 +13,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class SupplierController implements Initializable {
 
-    ObservableList<SupplierDto> supplierDtos = FXCollections.observableArrayList();
+    ObservableList<SupplierDto> supplierDos = FXCollections.observableArrayList();
+    SupplierService service = new SupplierServiceImpl();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -28,9 +30,13 @@ public class SupplierController implements Initializable {
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colAddress.setCellValueFactory(new PropertyValueFactory<>("address"));
 
-        tblSupplier.setItems(supplierDtos);
+        tblSupplier.setItems(supplierDos);
 
-        loadAllSuppliers();
+        try {
+            loadAllSuppliers();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         tblSupplier.getSelectionModel().selectedItemProperty().addListener((observableValue, supplierDto, newValue) -> {
             if(newValue !=null){
@@ -51,8 +57,9 @@ public class SupplierController implements Initializable {
 
     }
 
-    private void loadAllSuppliers() {
-
+    private void loadAllSuppliers() throws Exception {
+        supplierDos.clear();
+        tblSupplier.setItems(service.getAllSuppliers());
     }
 
     @FXML
@@ -89,12 +96,15 @@ public class SupplierController implements Initializable {
     private JFXTextField txtName;
 
     @FXML
-    void btnOnActionAdd(ActionEvent event) {
+    void btnOnActionAdd(ActionEvent event) throws Exception {
         String id = txtId.getText();
         String name = txtName.getText();
         String address = txtAddress.getText();
         String email = txtEmail.getText();
         String mobile = txtMobile.getText();
+
+        service.addSupplier(new SupplierDto(id, name, address, email, mobile));
+        loadAllSuppliers();
 
     }
 
