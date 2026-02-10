@@ -13,14 +13,20 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class SupplierController implements Initializable {
 
     ObservableList<SupplierDto> supplierDos = FXCollections.observableArrayList();
     SupplierService service = new SupplierServiceImpl();
+
+    // Callback to pass selected supplier back to ProductController
+    private Consumer<SupplierDto> onSupplierSelected;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -43,6 +49,20 @@ public class SupplierController implements Initializable {
                 setSelectedValue(newValue);
             }
         });
+
+        // Add double-click event handler
+        tblSupplier.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                SupplierDto selectedSupplier = tblSupplier.getSelectionModel().getSelectedItem();
+                if (selectedSupplier != null && onSupplierSelected != null) {
+                    // Call the callback to pass supplier back to ProductController
+                    onSupplierSelected.accept(selectedSupplier);
+                    // Close the supplier window
+                    Stage stage = (Stage) tblSupplier.getScene().getWindow();
+                    stage.close();
+                }
+            }
+        });
     }
 
     private void setSelectedValue(SupplierDto newValue) {
@@ -54,7 +74,11 @@ public class SupplierController implements Initializable {
         txtAddress.setText(newValue.getAddress());
         txtEmail.setText(newValue.getEmail());
         txtMobile.setText(newValue.getContact());
+    }
 
+    // Method to set the callback from ProductController
+    public void setOnSupplierSelected(Consumer<SupplierDto> callback) {
+        this.onSupplierSelected = callback;
     }
 
     private void loadAllSuppliers() throws Exception {

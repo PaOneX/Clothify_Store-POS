@@ -37,11 +37,10 @@ public class ProductServiceImpl implements ProductService {
                 products.add(new ProductDto(
                         resultSet.getInt("product_id"),
                         resultSet.getString("product_name"),
-                        resultSet.getString("description"),
                         resultSet.getDouble("price"),
-                        resultSet.getInt("qty_on_hand"),
-                        resultSet.getInt("supplier_id"),
-                        resultSet.getInt("category_id")
+                        resultSet.getInt("quantity"),
+                        resultSet.getInt("category_id"),
+                        resultSet.getString("supplier_id")
                 ));
             }
         } catch (RuntimeException e) {

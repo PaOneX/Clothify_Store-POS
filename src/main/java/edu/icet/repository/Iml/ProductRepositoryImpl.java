@@ -15,12 +15,11 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void addProduct(ProductDto productDto) {
         try {
             Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO products " +
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO product " +
                     "(product_name, description, price, qty_on_hand, category_id," +
                     " supplier_id) VALUES (?,?,?,?,?,?)");
 
             preparedStatement.setObject(1, productDto.getProductName());
-            preparedStatement.setObject(2, productDto.getDescription());
             preparedStatement.setObject(3, productDto.getPrice());
             preparedStatement.setObject(4, productDto.getQty());
             preparedStatement.setObject(5, productDto.getCategory());
@@ -42,7 +41,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void deleteProduct(Integer id) throws Exception {
 
         Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM products WHERE product_id = ?");
+        PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM product WHERE product_id = ?");
         preparedStatement.setObject(1, id);
         preparedStatement.executeUpdate();
 
@@ -51,7 +50,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public ResultSet getProducts() throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM products");
+        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM product");
         return preparedStatement.executeQuery();
     }
 }

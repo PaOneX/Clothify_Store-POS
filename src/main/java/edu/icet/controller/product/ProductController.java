@@ -7,13 +7,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -25,7 +29,6 @@ public class ProductController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         colid.setCellValueFactory(new PropertyValueFactory<>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<>("productName"));
-        colDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
         colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
         colQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
         colSupplier.setCellValueFactory(new PropertyValueFactory<>("supplierId"));
@@ -53,7 +56,6 @@ public class ProductController implements Initializable {
         }
         txtId.setText(String.valueOf(newValue.getId()));
         txtName.setText(newValue.getProductName());
-        txtdesc.setText(newValue.getDescription());
         txtPrice.setText(String.valueOf(newValue.getPrice()));
         txtQty.setText(String.valueOf(newValue.getQty()));
         txtSupplier.setText(String.valueOf(newValue.getSupplierId()));
@@ -65,8 +67,7 @@ public class ProductController implements Initializable {
     @FXML
     private TableColumn<?, ?> colCategory;
 
-    @FXML
-    private TableColumn<?, ?> colDesc;
+
 
     @FXML
     private TableColumn<?, ?> colid;
@@ -104,20 +105,18 @@ public class ProductController implements Initializable {
     @FXML
     private TextField txtSupplier;
 
-    @FXML
-    private TextArea txtdesc;
+
 
     @FXML
     void btnAddProduct(ActionEvent event) throws Exception {
         Integer id = Integer.valueOf((txtId.getText()));
         String name = txtName.getText();
-        String desc = txtdesc.getText();
         Integer qty = Integer.valueOf((txtQty.getText()));
         Double price = Double.valueOf(txtPrice.getText());
         Integer supplierId = Integer.valueOf(txtSupplier.getText());
-        Integer category = Integer.valueOf(txtCategory.getText());
+        String category =txtCategory.getText();
 
-        service.addProduct(new ProductDto(id,name,desc,price,qty,supplierId,category));
+        service.addProduct(new ProductDto(id, name, price, qty, supplierId, category));
         loadAllProducts();
     }
 
@@ -135,7 +134,6 @@ public class ProductController implements Initializable {
     private void clearFields() {
         txtId.clear();
         txtName.clear();
-        txtdesc.clear();
         txtPrice.clear();
         txtQty.clear();
         txtSupplier.clear();
@@ -143,14 +141,30 @@ public class ProductController implements Initializable {
     }
 
     @FXML
-    void btnDeleteProduct(ActionEvent event) throws Exception{
+    void btnDeleteProduct(ActionEvent event) throws Exception {
         service.deleteProduct(Integer.valueOf(txtId.getText()));
         loadAllProducts();
     }
 
     @FXML
     void btnSupplier(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Supplier_Management.fxml"));
+            Stage supplierStage = new Stage();
+            supplierStage.setScene(new Scene(loader.load()));
 
+            // Get the controller and set up the callback
+            edu.icet.controller.supplier.SupplierController supplierController = loader.getController();
+            supplierController.setOnSupplierSelected(selectedSupplier -> {
+                // Set the supplier ID and name in the product form
+                txtSupplier.setText(selectedSupplier.getId() + " - " + selectedSupplier.getName());
+            });
+
+            supplierStage.setTitle("Select Supplier");
+            supplierStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML

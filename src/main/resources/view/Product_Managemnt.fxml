@@ -3,7 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -18,7 +17,6 @@
       </Text>
       <TextField fx:id="txtId" layoutX="37.0" layoutY="89.0" prefHeight="42.0" prefWidth="62.0" promptText="id" />
       <TextField fx:id="txtName" layoutX="37.0" layoutY="142.0" prefHeight="41.0" prefWidth="238.0" promptText="Product Name" />
-      <TextArea fx:id="txtdesc" layoutX="37.0" layoutY="198.0" prefHeight="200.0" prefWidth="297.0" promptText="Description" />
       <TextField fx:id="txtPrice" layoutX="425.0" layoutY="89.0" prefHeight="41.0" prefWidth="238.0" promptText="price" />
       <TextField fx:id="txtQty" layoutX="425.0" layoutY="158.0" prefHeight="41.0" prefWidth="238.0" promptText="Quantity" />
       <TextField fx:id="txtSupplier" layoutX="425.0" layoutY="236.0" prefHeight="42.0" prefWidth="142.0" promptText="Supplier" />
@@ -27,11 +25,10 @@
         <columns>
           <TableColumn fx:id="colid" prefWidth="53.59997367858887" text="Id" />
           <TableColumn fx:id="colName" prefWidth="119.20001983642578" text="Product Name" />
-            <TableColumn fx:id="colDesc" prefWidth="311.20001220703125" text="Description" />
             <TableColumn fx:id="colPrice" prefWidth="98.39999389648438" text="Price" />
-            <TableColumn fx:id="colQty" prefWidth="89.60003662109375" text="Quantity" />
-            <TableColumn fx:id="colSupplier" prefWidth="85.5999755859375" text="Supplier" />
-            <TableColumn fx:id="colCategory" prefWidth="91.9998779296875" text="Category" />
+            <TableColumn fx:id="colQty" prefWidth="184.79998779296875" text="Quantity" />
+            <TableColumn fx:id="colSupplier" prefWidth="151.20001220703125" text="Supplier" />
+            <TableColumn fx:id="colCategory" prefWidth="262.4000244140625" text="Category" />
         </columns>
       </TableView>
       <Button layoutX="585.0" layoutY="236.0" mnemonicParsing="false" onAction="#btnSupplier" prefHeight="38.0" prefWidth="120.0" styleClass="info-btn" text="Add Supplier" />
