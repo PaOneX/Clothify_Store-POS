@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="edu.icet.controller.login.Login"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="456.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.login.LoginContoller">
+   <children>
+      <JFXButton buttonType="RAISED" layoutX="426.0" layoutY="335.0" onAction="#btnOnActionLogin" prefHeight="37.0" prefWidth="190.0" style="-fx-background-color: #7AAACE;" text="LogIn" textFill="WHITE" wrapText="true">
+         <font>
+            <Font name="Bookman Old Style Bold" size="20.0" />
+         </font>
+      </JFXButton>
+      <JFXTextField fx:id="txtUseName" layoutX="411.0" layoutY="173.0" prefHeight="26.0" prefWidth="243.0" promptText="Enter Username" />
+      <JFXPasswordField fx:id="txtPassword" layoutX="411.0" layoutY="253.0" prefHeight="26.0" prefWidth="243.0" promptText="Enter Password" />
+      <ImageView fitHeight="474.0" fitWidth="394.0" layoutX="-12.0" layoutY="-11.0" pickOnBounds="true">
+         <image>
+            <Image url="@../img/logo.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="63.0" layoutY="17.0" lineSpacing="5.0" prefHeight="130.0" prefWidth="257.0" text="Welcome to Clothify Store Point of Sale SystemPlease login to continue" textAlignment="CENTER" textFill="#817803" wrapText="true">
+         <font>
+            <Font name="Britannic Bold" size="18.0" />
+         </font>
+      </Label>
+   </children>
 </AnchorPane>
