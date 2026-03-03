@@ -1,4 +1,4 @@
-package edu.icet.repository;
+package edu.icet.repository.custom;
 
 import edu.icet.model.dto.SupplierDto;
 

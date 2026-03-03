@@ -1,8 +1,8 @@
-package edu.icet.repository.Iml;
+package edu.icet.repository.custom.Iml;
 
 import edu.icet.db.DBConnection;
 import edu.icet.model.dto.SupplierDto;
-import edu.icet.repository.SupplierRepository;
+import edu.icet.repository.custom.SupplierRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
