@@ -1,8 +1,8 @@
 package edu.icet.controller.product;
 
 import edu.icet.model.dto.ProductDto;
-import edu.icet.service.Impl.ProductServiceImpl;
-import edu.icet.service.ProductService;
+import edu.icet.service.custom.Impl.ProductServiceImpl;
+import edu.icet.service.custom.ProductService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,7 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
