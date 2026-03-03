@@ -1,10 +1,9 @@
-package edu.icet.repository;
+package edu.icet.repository.custom;
 
 import edu.icet.model.dto.ProductDto;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public interface ProductRepository {
     void   addProduct(ProductDto productDto) throws Exception;
