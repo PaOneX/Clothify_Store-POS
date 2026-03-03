@@ -1,9 +1,9 @@
-package edu.icet.service.Impl;
+package edu.icet.service.custom.Impl;
 
 import edu.icet.model.dto.SupplierDto;
-import edu.icet.repository.Iml.SupplierRepositoryImpl;
-import edu.icet.repository.SupplierRepository;
-import edu.icet.service.SupplierService;
+import edu.icet.repository.custom.Iml.SupplierRepositoryImpl;
+import edu.icet.repository.custom.SupplierRepository;
+import edu.icet.service.custom.SupplierService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

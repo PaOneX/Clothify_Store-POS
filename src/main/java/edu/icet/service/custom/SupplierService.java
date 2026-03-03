@@ -1,9 +1,7 @@
-package edu.icet.service;
+package edu.icet.service.custom;
 
 import edu.icet.model.dto.SupplierDto;
 import javafx.collections.ObservableList;
-
-import java.sql.ResultSet;
 
 public interface SupplierService {
     void addSupplier(SupplierDto supplierDTO) throws Exception;
