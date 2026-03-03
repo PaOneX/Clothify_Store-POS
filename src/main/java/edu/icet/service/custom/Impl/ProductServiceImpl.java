@@ -1,15 +1,14 @@
-package edu.icet.service.Impl;
+package edu.icet.service.custom.Impl;
 
 import edu.icet.model.dto.ProductDto;
-import edu.icet.repository.Iml.ProductRepositoryImpl;
-import edu.icet.repository.ProductRepository;
-import edu.icet.service.ProductService;
+import edu.icet.repository.custom.Iml.ProductRepositoryImpl;
+import edu.icet.repository.custom.ProductRepository;
+import edu.icet.service.custom.ProductService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
     ProductRepository repository =new ProductRepositoryImpl();

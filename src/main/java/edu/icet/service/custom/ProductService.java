@@ -1,9 +1,7 @@
-package edu.icet.service;
+package edu.icet.service.custom;
 
 import edu.icet.model.dto.ProductDto;
 import javafx.collections.ObservableList;
-
-import java.util.List;
 
 public interface ProductService {
     void addProduct(ProductDto productDto) throws Exception;
