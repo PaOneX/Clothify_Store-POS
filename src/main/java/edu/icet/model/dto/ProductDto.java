@@ -1,20 +1,24 @@
-package edu.icet.model.dto;
-
-import com.sun.scenario.effect.impl.prism.PrImage;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-public class ProductDto {
-    private Integer id;
-    private String productName;
-    private Double price;
-    private Integer qty;
-    private Integer supplierId;
-    private String category;
-}
+package edu.icet.model.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductDto {
+    private Integer id;
+    private String productName;
+    private String description;
+    private String imagePath;
+    private Integer categoryId;
+    private Integer supplierId;
+    private String categoryName;
+    private String supplierName;
+    // Aggregated from variants for display
+    private Double minPrice;
+    private Double maxPrice;
+    private Integer totalQty;
+    private Integer variantCount;
+}

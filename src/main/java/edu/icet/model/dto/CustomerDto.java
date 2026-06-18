@@ -7,10 +7,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierDto {
-    private Integer id;
+public class CustomerDto {
+    private Integer customerId;
     private String name;
-    private String contact;
+    private String phone;
     private String email;
     private String address;
+    private Boolean active;
+
+    @Override
+    public String toString() {
+        return name != null ? name : "";
+    }
 }

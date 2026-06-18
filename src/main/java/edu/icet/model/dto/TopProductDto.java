@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierDto {
-    private Integer id;
-    private String name;
-    private String contact;
-    private String email;
-    private String address;
+public class TopProductDto {
+    private Integer productId;
+    private String productName;
+    private int totalQtySold;
+    private double totalRevenue;
 }

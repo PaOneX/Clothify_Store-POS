@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierDto {
-    private Integer id;
-    private String name;
-    private String contact;
-    private String email;
-    private String address;
+public class InvoiceLineItemDto {
+    private String productName;
+    private Integer qty;
+    private Double unitPrice;
+    private Double lineTotal;
 }
