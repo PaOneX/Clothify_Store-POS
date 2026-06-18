@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="pageRoot" spacing="16.0" styleClass="content-page" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.returnorder.ReturnController">
+   <children>
+      <Label styleClass="page-title-label" text="Return Management" />
+      <HBox spacing="8.0">
+         <children>
+            <TextField fx:id="txtSearch" promptText="Invoice no (e.g. INV-20250618-0001) or Order ID" styleClass="modern-input" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#btnSearch" styleClass="nav-btn" text="Search" />
+         </children>
+      </HBox>
+      <Label fx:id="lblOrderInfo" styleClass="section-title" text="Search for an order by invoice number or order ID." wrapText="true" />
+      <TableView fx:id="tblItems" prefHeight="320.0" styleClass="product-table" VBox.vgrow="ALWAYS">
+         <columns>
+            <TableColumn fx:id="colReturn" prefWidth="70.0" text="Return?" />
+            <TableColumn fx:id="colProduct" prefWidth="180.0" text="Product" />
+            <TableColumn fx:id="colVariant" prefWidth="120.0" text="Size / Color" />
+            <TableColumn fx:id="colOrderedQty" prefWidth="90.0" text="Ordered" />
+            <TableColumn fx:id="colReturnQty" prefWidth="110.0" text="Qty to Return" />
+            <TableColumn fx:id="colUnitPrice" prefWidth="100.0" text="Unit Price" />
+         </columns>
+      </TableView>
+      <VBox spacing="10.0" styleClass="card">
+         <children>
+            <Label styleClass="section-title" text="Return Details" />
+            <TextField fx:id="txtReason" promptText="Reason for return" styleClass="modern-input" />
+            <HBox alignment="CENTER_LEFT" spacing="12.0">
+               <children>
+                  <Label minWidth="90.0" text="Return Type:" />
+                  <ComboBox fx:id="cmbReturnType" prefWidth="180.0" styleClass="modern-input" />
+               </children>
+            </HBox>
+            <Label fx:id="lblRefundEstimate" styleClass="cart-summary-total" text="Estimated refund: Rs. 0.00" />
+            <GridPane hgap="8.0" styleClass="action-bar" vgap="8.0">
+               <children>
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnProcessReturn" styleClass="nav-btn" text="Process Return" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+                  <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnClear" styleClass="clear-btn" text="Clear" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints percentWidth="50.0" />
+                  <ColumnConstraints percentWidth="50.0" />
+               </columnConstraints>
+            </GridPane>
+         </children>
+      </VBox>
+   </children>
+</VBox>
