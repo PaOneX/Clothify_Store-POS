@@ -2,12 +2,10 @@ package edu.icet.repository;
 
 import edu.icet.model.dto.SupplierDto;
 
-import java.sql.ResultSet;
+import java.util.List;
+import java.util.Optional;
 
-public interface SupplierRepository {
-    void addSupplier(SupplierDto supplierDto) throws Exception;
-    void updateSupplier(SupplierDto supplierDto);
-    void deleteSupplier(Integer id);
-    ResultSet getAllSuppliers() throws Exception;
-    void searchSupplier(Integer id);
+public interface SupplierRepository extends CrudRepository<SupplierDto, Integer> {
+    List<SupplierDto> searchByName(String name);
+    Optional<SupplierDto> findById(Integer id);
 }
