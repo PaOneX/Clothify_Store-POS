@@ -1,55 +1,44 @@
 package edu.icet.service.Impl;
 
 import edu.icet.model.dto.SupplierDto;
-import edu.icet.repository.Iml.SupplierRepositoryImpl;
 import edu.icet.repository.SupplierRepository;
 import edu.icet.service.SupplierService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.ResultSet;
-
 public class SupplierServiceImpl implements SupplierService {
-    SupplierRepository repository = new SupplierRepositoryImpl();
 
-    @Override
-    public void addSupplier(SupplierDto supplierDTO) throws Exception {
-        repository.addSupplier(supplierDTO);
+    private final SupplierRepository repository;
+
+    public SupplierServiceImpl(SupplierRepository repository) {
+        this.repository = repository;
     }
 
     @Override
-    public void updateSupplier(SupplierDto supplierDTO) throws Exception {
-
+    public int addSupplier(SupplierDto supplierDto) {
+        return repository.save(supplierDto);
     }
 
     @Override
-    public void deleteSupplier(String id) throws Exception {
+    public void updateSupplier(SupplierDto supplierDto) {
+        repository.update(supplierDto);
+    }
 
+    @Override
+    public void deleteSupplier(Integer id) {
+        repository.deleteById(id);
     }
 
     @Override
     public ObservableList<SupplierDto> getAllSuppliers() {
-        ObservableList<SupplierDto> supplierDtos = FXCollections.observableArrayList();
-        try {
-            ResultSet rs = repository.getAllSuppliers();
-            while (rs.next()) {
-                supplierDtos.add(new SupplierDto(
-                        rs.getString("supplier_id"),
-                        rs.getString("supplier_name"),
-                        rs.getString("phone"),
-                        rs.getString("email"),
-                        rs.getString("address")
-                ));
-
-            }
-            return supplierDtos;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return FXCollections.observableArrayList(repository.findAll());
     }
 
-        @Override
-        public SupplierDto searchSupplier (String id) throws Exception {
-            return null;
+    @Override
+    public ObservableList<SupplierDto> searchSuppliers(String name) {
+        if (name == null || name.isBlank()) {
+            return getAllSuppliers();
         }
+        return FXCollections.observableArrayList(repository.searchByName(name));
     }
+}
