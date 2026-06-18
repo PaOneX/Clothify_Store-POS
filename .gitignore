@@ -37,3 +37,8 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Logs & IDE workspace ###
+logs/
+.idea/workspace.xml
+.idea/copilot.data.migration.ask2agent.xml
