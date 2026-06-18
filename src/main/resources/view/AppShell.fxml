@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720.0" prefWidth="1200.0" styleClass="app-shell" stylesheets="@../css/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.shell.AppShellController">
+   <left>
+      <VBox prefWidth="220.0" spacing="8.0" styleClass="sidebar">
+         <padding><Insets bottom="20.0" left="16.0" right="16.0" top="20.0" /></padding>
+         <children>
+            <ImageView fx:id="imgLogo" fitHeight="48.0" fitWidth="140.0" pickOnBounds="true" preserveRatio="true" />
+            <Label styleClass="sidebar-brand" text="Clothify Store" />
+            <Label fx:id="lblUser" styleClass="sidebar-user" wrapText="true" />
+            <Button fx:id="btnDashboard" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnDashboard" styleClass="sidebar-btn" text="Dashboard" />
+            <Button fx:id="btnPlaceOrder" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnPlaceOrder" styleClass="sidebar-btn" text="Place Order" />
+            <Button fx:id="btnProducts" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnProducts" styleClass="sidebar-btn" text="Products" />
+            <Button fx:id="btnCategories" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnCategories" styleClass="sidebar-btn" text="Categories" />
+            <Button fx:id="btnInventory" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnInventory" styleClass="sidebar-btn" text="Inventory" />
+            <Button fx:id="btnSuppliers" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnSuppliers" styleClass="sidebar-btn" text="Suppliers" />
+            <Button fx:id="btnEmployees" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnEmployees" styleClass="sidebar-btn" text="Employees" />
+            <Button fx:id="btnCustomers" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnCustomers" styleClass="sidebar-btn" text="Customers" />
+            <Button fx:id="btnDiscounts" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnDiscounts" styleClass="sidebar-btn" text="Discounts" />
+            <Button fx:id="btnReturns" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnReturns" styleClass="sidebar-btn" text="Returns" />
+            <Button fx:id="btnReports" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnReports" styleClass="sidebar-btn" text="Reports" />
+            <VBox VBox.vgrow="ALWAYS" />
+            <Button fx:id="btnSettings" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnSettings" styleClass="sidebar-btn" text="Settings" />
+            <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#btnLogout" styleClass="delete-btn" text="Logout" />
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="content-scroll">
+         <content>
+            <StackPane fx:id="contentArea" maxWidth="Infinity" styleClass="content-area" />
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
