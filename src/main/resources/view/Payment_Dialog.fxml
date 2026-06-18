@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="dialogRoot" prefWidth="480.0" spacing="14.0" styleClass="card" stylesheets="@../css/Style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.order.PaymentDialogController">
+   <padding>
+      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+   </padding>
+   <children>
+      <Label styleClass="page-title-label" text="Payment" />
+      <VBox spacing="6.0" styleClass="cart-summary">
+         <children>
+            <HBox>
+               <children>
+                  <Label styleClass="cart-summary-label" text="Subtotal:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblSubtotal" styleClass="cart-summary-value" text="Rs. 0.00" />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="cart-summary-label" text="Discount:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblDiscount" styleClass="cart-summary-value" text="Rs. 0.00" />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="cart-summary-label" text="Tax:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblTax" styleClass="cart-summary-value" text="Rs. 0.00" />
+               </children>
+            </HBox>
+            <HBox>
+               <children>
+                  <Label styleClass="cart-summary-label" text="Total:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblTotal" styleClass="cart-summary-total" text="Rs. 0.00" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Label styleClass="section-title" text="Payment Method" />
+      <HBox spacing="12.0">
+         <children>
+            <RadioButton fx:id="rbCash" mnemonicParsing="false" selected="true" text="Cash" />
+            <RadioButton fx:id="rbCard" mnemonicParsing="false" text="Card" />
+            <RadioButton fx:id="rbBankTransfer" mnemonicParsing="false" text="Bank Transfer" />
+            <RadioButton fx:id="rbSplit" mnemonicParsing="false" text="Split" />
+         </children>
+      </HBox>
+      <VBox fx:id="cashPane" spacing="8.0">
+         <children>
+            <Label styleClass="section-title" text="Cash Payment" />
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label minWidth="110.0" text="Amount Received:" />
+                  <TextField fx:id="txtAmountReceived" promptText="0.00" styleClass="modern-input" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+               <children>
+                  <Label minWidth="110.0" text="Change:" />
+                  <Label fx:id="lblChangeGiven" styleClass="cart-summary-total" text="Rs. 0.00" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <VBox fx:id="splitPane" managed="false" spacing="8.0" visible="false">
+         <children>
+            <Label styleClass="section-title" text="Split Payment" />
+            <VBox fx:id="splitRowsContainer" spacing="4.0" />
+            <HBox spacing="8.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#btnAddSplitRow" styleClass="add-btn" text="Add Row" />
+                  <Button mnemonicParsing="false" onAction="#btnRemoveSplitRow" styleClass="delete-btn" text="Remove Row" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+            <HBox alignment="CENTER_RIGHT" spacing="10.0">
+         <children>
+            <Label styleClass="cart-item-meta" text="← → Payment  |  ENTER Confirm  |  ESC Cancel" />
+            <Button fx:id="btnCancel" mnemonicParsing="false" onAction="#btnCancel" prefHeight="38.0" prefWidth="110.0" styleClass="clear-btn" text="Cancel" />
+            <Button fx:id="btnConfirm" mnemonicParsing="false" onAction="#btnConfirm" prefHeight="38.0" prefWidth="110.0" styleClass="nav-btn" text="Confirm" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
