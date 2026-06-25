@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Clothify Store" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="edu.icet.Main" />
+    <module name="Clothify_Store" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
