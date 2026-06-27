@@ -1,5 +1,6 @@
 package edu.icet.controller.report;
 
+import edu.icet.factory.DesktopServiceFactory;
 import edu.icet.factory.ServiceFactory;
 import edu.icet.model.dto.*;
 import edu.icet.service.BackupService;
@@ -41,7 +42,7 @@ public class ReportController implements Initializable {
 
     private final ReportService reportService = ServiceFactory.getInstance().getReportService();
     private final InvoiceService invoiceService = ServiceFactory.getInstance().getInvoiceService();
-    private final JasperReportService jasperReportService = ServiceFactory.getInstance().getJasperReportService();
+    private final JasperReportService jasperReportService = DesktopServiceFactory.getInstance().getJasperReportService();
     private final BackupService backupService = ServiceFactory.getInstance().getBackupService();
 
     @FXML private DatePicker dpFrom;
