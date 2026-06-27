@@ -21,10 +21,10 @@ public final class ServiceFactory {
     private final InvoiceService invoiceService;
     private final ReturnService returnService;
     private final ReportService reportService;
-    private final JasperReportService jasperReportService;
     private final NotificationService notificationService;
     private final AuditService auditService;
     private final BackupService backupService;
+    private final OnlineOrderService onlineOrderService;
 
     private ServiceFactory() {
         productService = new ProductServiceImpl(repositoryFactory.getProductRepository());
@@ -68,13 +68,18 @@ public final class ServiceFactory {
                 repositoryFactory.getReportRepository(),
                 orderService
         );
-        jasperReportService = new JasperReportServiceImpl();
         notificationService = new NotificationServiceImpl(
                 repositoryFactory.getNotificationRepository(),
                 repositoryFactory.getProductVariantRepository()
         );
         auditService = new AuditServiceImpl(repositoryFactory.getAuditRepository());
         backupService = new BackupServiceImpl();
+        onlineOrderService = new OnlineOrderServiceImpl(
+                orderService,
+                customerService,
+                repositoryFactory.getProductVariantRepository(),
+                repositoryFactory.getUserRepository()
+        );
     }
 
     public static ServiceFactory getInstance() {
@@ -97,8 +102,8 @@ public final class ServiceFactory {
     public InvoiceService getInvoiceService() { return invoiceService; }
     public ReturnService getReturnService() { return returnService; }
     public ReportService getReportService() { return reportService; }
-    public JasperReportService getJasperReportService() { return jasperReportService; }
     public NotificationService getNotificationService() { return notificationService; }
     public AuditService getAuditService() { return auditService; }
     public BackupService getBackupService() { return backupService; }
+    public OnlineOrderService getOnlineOrderService() { return onlineOrderService; }
 }
