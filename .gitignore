@@ -40,5 +40,18 @@ build/
 
 ### Logs & IDE workspace ###
 logs/
-.idea/workspace.xml
-.idea/copilot.data.migration.ask2agent.xml
+.idea/
+
+### Documentation & environment (local only) ###
+*.md
+db.properties
+**/db.properties
+.env
+.env.*
+application.yml
+**/application.yml
+
+### Accidental duplicate package trees ###
+src/main/java/icet/
+src/main/java/edu/icet/controller/controller/
+src/main/java/edu/icet/util/util/
