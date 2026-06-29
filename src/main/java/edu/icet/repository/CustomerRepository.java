@@ -12,4 +12,5 @@ public interface CustomerRepository {
     List<CustomerDto> findAll();
     List<CustomerDto> search(String term);
     Optional<CustomerDto> findById(Integer customerId);
+    Optional<CustomerDto> findByPhone(String phone);
 }

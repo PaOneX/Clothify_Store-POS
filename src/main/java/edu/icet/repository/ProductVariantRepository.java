@@ -20,4 +20,5 @@ public interface ProductVariantRepository {
     int getQuantity(Integer variantId);
     void updateBarcode(Integer variantId, String barcode);
     List<ProductVariantDto> findLowStock(int threshold);
+    boolean existsDuplicate(Integer productId, String size, String color, Integer excludeVariantId);
 }

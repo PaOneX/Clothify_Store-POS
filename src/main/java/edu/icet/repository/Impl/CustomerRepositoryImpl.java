@@ -68,6 +68,18 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         );
     }
 
+    @Override
+    public Optional<CustomerDto> findByPhone(String phone) {
+        if (phone == null || phone.isBlank()) {
+            return Optional.empty();
+        }
+        return CrudUtil.executeQueryForOptional(
+                "SELECT customer_id, name, phone, email, address, active FROM customer WHERE phone = ?",
+                this::mapRow,
+                phone.trim()
+        );
+    }
+
     private CustomerDto mapRow(ResultSet rs) throws SQLException {
         return new CustomerDto(
                 rs.getInt("customer_id"),

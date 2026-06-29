@@ -171,6 +171,21 @@ public class ProductVariantRepositoryImpl implements ProductVariantRepository {
         );
     }
 
+    @Override
+    public boolean existsDuplicate(Integer productId, String size, String color, Integer excludeVariantId) {
+        String normalizedSize = size == null ? "" : size.trim();
+        String normalizedColor = color == null ? "" : color.trim();
+        String sql = """
+                SELECT COUNT(*) FROM product_variant
+                WHERE product_id = ? AND IFNULL(size, '') = ? AND IFNULL(color, '') = ?
+                """ + (excludeVariantId != null ? " AND variant_id <> ?" : "");
+        Object[] params = excludeVariantId != null
+                ? new Object[]{productId, normalizedSize, normalizedColor, excludeVariantId}
+                : new Object[]{productId, normalizedSize, normalizedColor};
+        return CrudUtil.executeQueryForOptional(sql, rs -> rs.getInt(1), params)
+                .orElse(0) > 0;
+    }
+
     private ProductVariantDto mapRow(ResultSet rs) throws SQLException {
         return new ProductVariantDto(
                 rs.getInt("variant_id"),

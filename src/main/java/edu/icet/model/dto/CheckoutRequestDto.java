@@ -1,5 +1,6 @@
 package edu.icet.model.dto;
 
+import edu.icet.model.enums.OrderSource;
 import edu.icet.model.enums.PaymentMethod;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class CheckoutRequestDto {
     private Double manualDiscountFixed;
     private PaymentMethod paymentMethod;
     private Double amountReceived;
+    private OrderSource orderSource = OrderSource.POS;
     private List<OrderPaymentDto> splitPayments = new ArrayList<>();
 }

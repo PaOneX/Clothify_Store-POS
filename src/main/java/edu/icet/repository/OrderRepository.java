@@ -19,6 +19,7 @@ public interface OrderRepository {
     List<OrderDto> searchOrders(LocalDate from, LocalDate to, Integer orderId, Integer cashierId);
     List<OrderDto> findByCustomerId(Integer customerId);
     Optional<OrderDto> findById(Integer orderId);
+    Optional<OrderDto> findByIdAndCustomerPhone(Integer orderId, String phone);
     Optional<OrderDto> findByInvoiceNo(String invoiceNo);
     List<OrderItemDto> findItemsByOrderId(Integer orderId);
     List<OrderPaymentDto> findPaymentsByOrderId(Integer orderId);

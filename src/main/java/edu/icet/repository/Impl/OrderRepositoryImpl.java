@@ -3,6 +3,7 @@ package edu.icet.repository.Impl;
 import edu.icet.model.dto.OrderDto;
 import edu.icet.model.dto.OrderItemDto;
 import edu.icet.model.dto.OrderPaymentDto;
+import edu.icet.model.enums.OrderSource;
 import edu.icet.model.enums.OrderStatus;
 import edu.icet.model.enums.PaymentMethod;
 import edu.icet.db.DBConnection;
@@ -24,9 +25,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private static final String ORDER_SELECT = """
             SELECT o.order_id, o.order_date, o.cashier_id, e.name AS cashier_name,
-                   o.customer_id, c.name AS customer_name,
+                   o.customer_id, c.name AS customer_name, c.phone AS customer_phone,
                    o.subtotal, o.discount_amount, o.discount_id, o.tax, o.total,
-                   o.payment_method, o.amount_received, o.change_given, o.status
+                   o.payment_method, o.amount_received, o.change_given, o.status, o.order_source
             FROM order_header o
             JOIN `user` u ON o.cashier_id = u.user_id
             LEFT JOIN employee e ON u.employee_id = e.employee_id
@@ -47,8 +48,8 @@ public class OrderRepositoryImpl implements OrderRepository {
         return CrudUtil.executeUpdateWithGeneratedKeys(connection,
                 """
                 INSERT INTO order_header (cashier_id, customer_id, subtotal, discount_amount, discount_id,
-                    tax, total, payment_method, amount_received, change_given, status)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?)
+                    tax, total, payment_method, amount_received, change_given, status, order_source)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)
                 """,
                 order.getCashierId(),
                 order.getCustomerId(),
@@ -60,7 +61,8 @@ public class OrderRepositoryImpl implements OrderRepository {
                 order.getPaymentMethod() != null ? order.getPaymentMethod().name() : PaymentMethod.CASH.name(),
                 order.getAmountReceived(),
                 order.getChangeGiven(),
-                order.getStatus().name()
+                order.getStatus().name(),
+                order.getOrderSource() != null ? order.getOrderSource().name() : "POS"
         );
     }
 
@@ -146,6 +148,19 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public Optional<OrderDto> findByIdAndCustomerPhone(Integer orderId, String phone) {
+        if (phone == null || phone.isBlank()) {
+            return Optional.empty();
+        }
+        return CrudUtil.executeQueryForOptional(
+                ORDER_SELECT + " WHERE o.order_id = ? AND c.phone = ?",
+                this::mapOrderRow,
+                orderId,
+                phone.trim()
+        );
+    }
+
+    @Override
     public Optional<OrderDto> findByInvoiceNo(String invoiceNo) {
         return CrudUtil.executeQueryForOptional(
                 ORDER_SELECT + " JOIN invoice i ON o.order_id = i.order_id WHERE i.invoice_no = ?",
@@ -202,6 +217,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 rs.getObject("amount_received") != null ? rs.getDouble("amount_received") : null,
                 rs.getObject("change_given") != null ? rs.getDouble("change_given") : null,
                 OrderStatus.valueOf(rs.getString("status")),
+                OrderSource.valueOf(rs.getString("order_source")),
                 new ArrayList<>(),
                 new ArrayList<>()
         );
