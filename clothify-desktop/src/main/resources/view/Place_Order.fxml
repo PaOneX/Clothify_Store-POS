@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="pageRoot" maxHeight="Infinity" maxWidth="Infinity" styleClass="content-page pos-page" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.order.OrderController">
+   <top>
+      <HBox alignment="CENTER_LEFT" spacing="12.0" styleClass="pos-header">
+         <padding><Insets bottom="10.0" left="12.0" right="12.0" top="10.0" /></padding>
+         <children>
+            <ImageView fx:id="imgLogo" fitHeight="36.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true" />
+            <Label styleClass="pos-brand" text="Clothify POS" />
+            <TextField fx:id="txtSearch" HBox.hgrow="ALWAYS" maxWidth="360.0" promptText="Search products..." styleClass="modern-input" />
+            <TextField fx:id="txtBarcode" maxWidth="1.0" prefWidth="1.0" visible="false" />
+            <Label styleClass="cart-summary-label" text="Customer:" />
+            <ComboBox fx:id="cmbCustomer" minWidth="160.0" prefWidth="180.0" promptText="Walk-in" styleClass="modern-input" />
+            <Label fx:id="lblCashier" styleClass="cart-summary-label" />
+            <Label fx:id="lblDateTime" styleClass="cart-summary-label" />
+         </children>
+      </HBox>
+   </top>
+   <left>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefWidth="180.0" styleClass="category-scroll">
+         <content>
+            <VBox fx:id="categorySidebar" spacing="6.0" styleClass="category-sidebar">
+               <padding><Insets bottom="8.0" left="8.0" right="8.0" top="8.0" /></padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </left>
+   <center>
+      <VBox spacing="8.0" styleClass="product-panel" BorderPane.alignment="CENTER">
+         <padding><Insets bottom="8.0" left="8.0" right="8.0" top="8.0" /></padding>
+         <ScrollPane fx:id="productScroll" fitToWidth="true" hbarPolicy="NEVER" styleClass="product-scroll" VBox.vgrow="ALWAYS">
+            <content>
+               <TilePane fx:id="productGrid" hgap="16.0" vgap="16.0" />
+            </content>
+         </ScrollPane>
+      </VBox>
+   </center>
+   <right>
+      <VBox maxWidth="420.0" minWidth="320.0" prefWidth="360.0" spacing="10.0" styleClass="cart-panel">
+         <padding><Insets bottom="12.0" left="12.0" right="12.0" top="12.0" /></padding>
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="8.0">
+               <Label fx:id="lblCartTitle" styleClass="section-title" text="Cart" HBox.hgrow="ALWAYS" />
+               <Button mnemonicParsing="false" onAction="#btnClearCart" styleClass="clear-btn" text="Clear" />
+            </HBox>
+            <Label fx:id="lblCartEmpty" styleClass="cart-empty" text="Cart is empty. Tap a product to add." wrapText="true" />
+            <ListView fx:id="lstCart" styleClass="cart-list-view" VBox.vgrow="ALWAYS" />
+            <VBox spacing="4.0" styleClass="cart-summary">
+               <HBox>
+                  <Label styleClass="cart-summary-label" text="Subtotal:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblSubtotal" styleClass="cart-summary-value" text="Rs. 0.00" />
+               </HBox>
+               <HBox>
+                  <Label styleClass="cart-summary-label" text="Discount:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblDiscount" styleClass="cart-summary-value" text="Rs. 0.00" />
+               </HBox>
+               <HBox>
+                  <Label styleClass="cart-summary-label" text="Tax:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblTax" styleClass="cart-summary-value" text="Rs. 0.00" />
+               </HBox>
+               <HBox>
+                  <Label styleClass="cart-summary-label" text="Total:" HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblTotal" styleClass="cart-summary-total" text="Rs. 0.00" />
+               </HBox>
+            </VBox>
+            <HBox spacing="8.0">
+               <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#btnApplyDiscount" styleClass="info-btn" text="Discount" HBox.hgrow="ALWAYS" />
+               <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#btnNewOrder" styleClass="clear-btn" text="New Order" HBox.hgrow="ALWAYS" />
+            </HBox>
+            <Button maxHeight="48.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#btnCheckout" prefHeight="48.0" styleClass="nav-btn pos-charge-btn" text="CHARGE" />
+         </children>
+      </VBox>
+   </right>
+   <bottom>
+      <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="pos-shortcuts">
+         <padding><Insets bottom="6.0" left="12.0" right="12.0" top="6.0" /></padding>
+         <Label styleClass="cart-item-meta" text="↑↓←→ Navigate products  |  ENTER Add  |  +/- Qty  |  F1 New  |  F2 Search  |  F3 Checkout  |  DEL Remove  |  ESC Clear" />
+      </HBox>
+   </bottom>
+</BorderPane>

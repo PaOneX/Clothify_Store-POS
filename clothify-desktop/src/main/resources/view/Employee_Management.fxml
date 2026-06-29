@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="pageRoot" spacing="16.0" styleClass="content-page" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.employee.EmployeeController">
+   <children>
+      <Label styleClass="page-title-label" text="Employee Management" />
+      <HBox spacing="16.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox minWidth="340.0" prefWidth="360.0" spacing="12.0" styleClass="card">
+               <children>
+                  <Label styleClass="section-title" text="Employee Form" />
+                  <Label styleClass="muted-label" text="ID" />
+                  <TextField fx:id="txtId" editable="false" styleClass="modern-input field-locked id-field" />
+                  <TextField fx:id="txtName" promptText="Name" styleClass="modern-input" />
+                  <TextField fx:id="txtPhone" promptText="Phone" styleClass="modern-input" />
+                  <TextField fx:id="txtEmail" promptText="Email" styleClass="modern-input" />
+                  <TextField fx:id="txtAddress" promptText="Address" styleClass="modern-input" />
+                  <DatePicker fx:id="dpHireDate" styleClass="modern-input" />
+                  <CheckBox fx:id="chkActive" selected="true" text="Active" />
+                  <Label styleClass="section-title" text="Staff Login" />
+                  <CheckBox fx:id="chkCreateLogin" text="Create Staff Login" />
+                  <TextField fx:id="txtUsername" promptText="Username" styleClass="modern-input" />
+                  <TextField fx:id="txtPassword" promptText="Password" styleClass="modern-input" />
+                  <GridPane hgap="8.0" styleClass="action-bar" vgap="8.0">
+                     <children>
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnAdd" styleClass="add-btn" text="Add" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnUpdate" styleClass="update-btn" text="Update" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="0" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnDelete" styleClass="delete-btn" text="Delete" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                        <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#btnClear" styleClass="clear-btn" text="Clear" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                     </children>
+                     <columnConstraints>
+                        <ColumnConstraints percentWidth="50.0" />
+                        <ColumnConstraints percentWidth="50.0" />
+                     </columnConstraints>
+                  </GridPane>
+               </children>
+            </VBox>
+            <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
+               <children>
+                  <HBox spacing="8.0">
+                     <children>
+                        <TextField fx:id="txtSearch" prefWidth="200.0" promptText="Search by name" styleClass="modern-input" />
+                        <Button mnemonicParsing="false" onAction="#btnSearch" styleClass="nav-btn" text="Search" />
+                     </children>
+                  </HBox>
+                  <TableView fx:id="tblEmployee" prefHeight="480.0" styleClass="product-table" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
+                        <TableColumn fx:id="colName" prefWidth="150.0" text="Name" />
+                        <TableColumn fx:id="colPhone" prefWidth="120.0" text="Phone" />
+                        <TableColumn fx:id="colEmail" prefWidth="180.0" text="Email" />
+                        <TableColumn fx:id="colHireDate" prefWidth="120.0" text="Hire Date" />
+                        <TableColumn fx:id="colActive" prefWidth="80.0" text="Active" />
+                     </columns>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

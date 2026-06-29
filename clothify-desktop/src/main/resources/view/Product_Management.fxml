@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.control.Button?>
+
+<?import javafx.scene.control.ComboBox?>
+
+<?import javafx.scene.control.Label?>
+
+<?import javafx.scene.control.TableColumn?>
+
+<?import javafx.scene.control.TableView?>
+
+<?import javafx.scene.control.TextField?>
+
+<?import javafx.scene.image.ImageView?>
+
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<?import javafx.scene.layout.GridPane?>
+
+<?import javafx.scene.layout.HBox?>
+
+<?import javafx.scene.control.CheckBox?>
+
+<?import javafx.scene.layout.FlowPane?>
+
+
+
+<VBox fx:id="pageRoot" spacing="16.0" styleClass="content-page" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.icet.controller.product.ProductController">
+
+   <children>
+
+      <Label styleClass="page-title-label" text="Product Management" />
+
+      <HBox spacing="16.0" VBox.vgrow="ALWAYS">
+
+         <children>
+
+            <VBox minWidth="320.0" prefWidth="340.0" spacing="10.0" styleClass="card">
+
+               <children>
+
+                  <Label styleClass="section-title" text="Product" />
+
+                  <Label styleClass="muted-label" text="ID" />
+                  <TextField fx:id="txtId" editable="false" styleClass="modern-input field-locked id-field" />
+
+                  <TextField fx:id="txtName" promptText="Product Name" styleClass="modern-input" />
+
+                  <TextField fx:id="txtDescription" promptText="Description" styleClass="modern-input" />
+
+                  <HBox spacing="8.0">
+
+                     <TextField fx:id="txtImagePath" HBox.hgrow="ALWAYS" promptText="Image path" styleClass="modern-input" />
+
+                     <Button mnemonicParsing="false" onAction="#btnBrowseImage" styleClass="info-btn" text="Browse" />
+
+                  </HBox>
+
+                  <ImageView fx:id="imgPreview" fitHeight="120.0" fitWidth="140.0" preserveRatio="true" styleClass="image-preview" />
+
+                  <ComboBox fx:id="cmbCategory" prefWidth="280.0" promptText="Category" styleClass="modern-input" />
+
+                  <HBox spacing="8.0">
+
+                     <TextField fx:id="txtSupplier" editable="false" HBox.hgrow="ALWAYS" promptText="Supplier" styleClass="modern-input" />
+
+                     <Button fx:id="btnSupplier" mnemonicParsing="false" onAction="#btnSupplier" styleClass="info-btn" text="Pick" />
+
+                  </HBox>
+
+                  <GridPane hgap="8.0" styleClass="action-bar" vgap="8.0">
+
+                     <Button fx:id="btnAddProduct" maxWidth="Infinity" onAction="#btnAddProduct" styleClass="add-btn" text="Add" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS" />
+
+                     <Button fx:id="btnUpdateProduct" maxWidth="Infinity" onAction="#btnUpdateProduct" styleClass="update-btn" text="Update" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+
+                     <Button fx:id="btnDeleteProduct" maxWidth="Infinity" onAction="#btnDeleteProduct" styleClass="delete-btn" text="Delete" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" />
+
+                     <Button maxWidth="Infinity" onAction="#btnClear" styleClass="clear-btn" text="Clear" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.hgrow="ALWAYS" />
+
+                     <columnConstraints><ColumnConstraints percentWidth="50.0" /><ColumnConstraints percentWidth="50.0" /></columnConstraints>
+
+                  </GridPane>
+
+                  <Button fx:id="btnCategory" maxWidth="Infinity" onAction="#btnCategory" styleClass="info-btn" text="Manage Categories" />
+
+                  <Label styleClass="section-title" text="Variant" />
+
+                  <Label styleClass="muted-label" text="Variant ID" />
+                  <TextField fx:id="txtVarId" editable="false" styleClass="modern-input field-locked id-field" />
+
+                  <HBox spacing="8.0">
+
+                     <TextField fx:id="txtVarSku" HBox.hgrow="ALWAYS" promptText="SKU prefix" styleClass="modern-input" />
+
+                     <ComboBox fx:id="cmbVarSize" prefWidth="90.0" promptText="Size" styleClass="modern-input" />
+
+                  </HBox>
+
+                  <HBox spacing="8.0">
+
+                     <CheckBox fx:id="chkCustomSize" text="Custom size" />
+
+                     <TextField fx:id="txtVarSizeCustom" HBox.hgrow="ALWAYS" managed="false" promptText="e.g. 30, 32" styleClass="modern-input" visible="false" />
+
+                  </HBox>
+
+                  <FlowPane fx:id="sizeSetPane" hgap="8.0" vgap="4.0" />
+
+                  <Button maxWidth="Infinity" onAction="#btnAddSizeSet" styleClass="info-btn" text="Add Size Set (selected sizes)" />
+
+                  <TextField fx:id="txtVarColor" promptText="Color" styleClass="modern-input" />
+
+                  <HBox spacing="8.0">
+
+                     <TextField fx:id="txtVarPrice" prefWidth="100.0" promptText="Price" styleClass="modern-input" />
+
+                     <TextField fx:id="txtVarQty" prefWidth="100.0" promptText="Qty" styleClass="modern-input" />
+
+                  </HBox>
+
+                  <TextField fx:id="txtVarBarcode" promptText="Barcode" styleClass="modern-input" />
+
+                  <HBox spacing="8.0">
+
+                     <Button maxWidth="Infinity" onAction="#btnAddVariant" styleClass="add-btn" text="Add Var" HBox.hgrow="ALWAYS" />
+
+                     <Button maxWidth="Infinity" onAction="#btnUpdateVariant" styleClass="update-btn" text="Update Var" HBox.hgrow="ALWAYS" />
+
+                  </HBox>
+
+                  <HBox spacing="8.0">
+
+                     <Button maxWidth="Infinity" onAction="#btnDeleteVariant" styleClass="delete-btn" text="Delete Var" HBox.hgrow="ALWAYS" />
+
+                     <Button maxWidth="Infinity" onAction="#btnGenerateBarcode" styleClass="info-btn" text="Barcode" HBox.hgrow="ALWAYS" />
+
+                  </HBox>
+
+               </children>
+
+            </VBox>
+
+            <VBox spacing="10.0" styleClass="card" HBox.hgrow="ALWAYS">
+
+               <children>
+
+                  <Label styleClass="section-title" text="Catalog" />
+
+                  <HBox spacing="8.0">
+
+                     <TextField fx:id="txtSearchName" prefWidth="200.0" promptText="Search Product..." styleClass="modern-input" HBox.hgrow="ALWAYS" />
+
+                     <ComboBox fx:id="cmbFilterCategory" minWidth="140.0" styleClass="modern-input" />
+
+                     <Button onAction="#btnSearch" styleClass="nav-btn" text="Search" />
+
+                  </HBox>
+
+                  <TableView fx:id="tblProduct" prefHeight="220.0" styleClass="product-table" VBox.vgrow="ALWAYS">
+
+                     <columns>
+
+                        <TableColumn fx:id="colImage" prefWidth="60.0" text="Image" />
+
+                        <TableColumn fx:id="colid" prefWidth="40.0" text="ID" />
+
+                        <TableColumn fx:id="colName" prefWidth="140.0" text="Name" />
+
+                        <TableColumn fx:id="colPrice" prefWidth="80.0" text="Price" />
+
+                        <TableColumn fx:id="colQty" prefWidth="60.0" text="Stock" />
+
+                        <TableColumn fx:id="colCategory" prefWidth="100.0" text="Category" />
+
+                        <TableColumn fx:id="colSupplier" prefWidth="100.0" text="Supplier" />
+
+                     </columns>
+
+                  </TableView>
+
+                  <Label styleClass="section-title" text="Variants" />
+
+                  <TableView fx:id="tblVariants" prefHeight="180.0" styleClass="product-table" VBox.vgrow="ALWAYS">
+
+                     <columns>
+
+                        <TableColumn fx:id="colVarSku" prefWidth="90.0" text="SKU" />
+
+                        <TableColumn fx:id="colVarSize" prefWidth="60.0" text="Size" />
+
+                        <TableColumn fx:id="colVarColor" prefWidth="70.0" text="Color" />
+
+                        <TableColumn fx:id="colVarPrice" prefWidth="80.0" text="Price" />
+
+                        <TableColumn fx:id="colVarQty" prefWidth="50.0" text="Qty" />
+
+                        <TableColumn fx:id="colVarBarcode" prefWidth="120.0" text="Barcode" />
+
+                     </columns>
+
+                  </TableView>
+
+               </children>
+
+            </VBox>
+
+         </children>
+
+      </HBox>
+
+   </children>
+
+</VBox>
+
