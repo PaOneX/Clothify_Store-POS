@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clothify Store</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="site-header">
+    <h1>Clothify Store</h1>
+    <p>Browse our catalog and place your order online.</p>
+</header>
+
+<main class="layout">
+    <aside class="sidebar">
+        <h2>Categories</h2>
+        <div id="categoryList" class="category-list"></div>
+    </aside>
+
+    <section class="catalog">
+        <div class="toolbar">
+            <input id="searchInput" type="search" placeholder="Search products...">
+            <button id="searchBtn" type="button">Search</button>
+        </div>
+        <div id="productGrid" class="product-grid"></div>
+    </section>
+
+    <aside class="cart-panel">
+        <h2>Cart <span id="cartCount" class="badge">0</span></h2>
+        <div id="cartItems" class="cart-items"></div>
+        <form id="checkoutForm" class="checkout-form">
+            <h3>Your details</h3>
+            <input id="customerName" required placeholder="Full name">
+            <input id="customerPhone" required placeholder="Phone">
+            <input id="customerEmail" type="email" placeholder="Email (optional)">
+            <textarea id="customerAddress" placeholder="Delivery address"></textarea>
+            <div class="totals">
+                <span>Total</span>
+                <strong id="cartTotal">Rs. 0.00</strong>
+            </div>
+            <button type="submit" class="charge-btn">Place Order</button>
+        </form>
+        <p id="orderMessage" class="order-message"></p>
+    </aside>
+</main>
+
+<div id="sizeModal" class="modal hidden">
+    <div class="modal-card">
+        <button id="closeModal" class="modal-close" type="button">×</button>
+        <h3 id="modalProductName"></h3>
+        <img id="modalImage" alt="">
+        <p id="modalPrice"></p>
+        <div id="sizeOptions" class="size-options"></div>
+        <button id="addToCartBtn" type="button" disabled>Add to Cart</button>
+    </div>
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
