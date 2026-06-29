@@ -4,7 +4,9 @@ import edu.icet.factory.ServiceFactory;
 import edu.icet.model.dto.CategoryDto;
 import edu.icet.model.dto.ProductDto;
 import edu.icet.model.dto.ProductVariantDto;
+import edu.icet.model.enums.ClothingSize;
 import edu.icet.service.CategoryService;
+import edu.icet.service.ImageStorageService;
 import edu.icet.service.ProductService;
 import edu.icet.service.ProductVariantService;
 import edu.icet.util.AlertUtil;
@@ -23,10 +25,16 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ProductController implements Initializable {
@@ -38,6 +46,11 @@ public class ProductController implements Initializable {
     private final ObservableList<ProductVariantDto> variants = FXCollections.observableArrayList();
     private boolean readOnly;
     private Integer selectedSupplierId;
+    private File pendingImageFile;
+    private String storedImagePath;
+
+    private final ImageStorageService imageStorage = ImageStorageService.getInstance();
+    private final Map<ClothingSize, CheckBox> sizeSetChecks = new LinkedHashMap<>();
 
     @FXML private TextField txtId;
     @FXML private TextField txtName;
@@ -64,7 +77,10 @@ public class ProductController implements Initializable {
     @FXML private TableColumn<ProductVariantDto, Integer> colVarQty;
     @FXML private TableColumn<ProductVariantDto, String> colVarBarcode;
     @FXML private TextField txtVarSku;
-    @FXML private TextField txtVarSize;
+    @FXML private ComboBox<ClothingSize> cmbVarSize;
+    @FXML private CheckBox chkCustomSize;
+    @FXML private TextField txtVarSizeCustom;
+    @FXML private FlowPane sizeSetPane;
     @FXML private TextField txtVarColor;
     @FXML private TextField txtVarPrice;
     @FXML private TextField txtVarQty;
@@ -126,6 +142,7 @@ public class ProductController implements Initializable {
         UiEffects.applyToForm(pageRoot);
         FormFieldUtil.lockAutoIdField(txtId);
         FormFieldUtil.lockAutoIdField(txtVarId);
+        setupSizeControls();
         loadCategories();
         loadAllProducts();
 
@@ -143,6 +160,46 @@ public class ProductController implements Initializable {
         cmbFilterCategory.setConverter(categoryConverter());
         imgPreview.setImage(ImageUtil.getProductImage(null));
         txtSearchName.setOnAction(e -> btnSearch(null));
+    }
+
+    private void setupSizeControls() {
+        cmbVarSize.setItems(FXCollections.observableArrayList(ClothingSize.values()));
+        cmbVarSize.getSelectionModel().select(ClothingSize.M);
+        chkCustomSize.selectedProperty().addListener((obs, wasCustom, custom) -> {
+            cmbVarSize.setDisable(custom);
+            txtVarSizeCustom.setVisible(custom);
+            txtVarSizeCustom.setManaged(custom);
+        });
+        for (ClothingSize size : ClothingSize.standardSizes()) {
+            CheckBox box = new CheckBox(size.getLabel());
+            box.setUserData(size);
+            box.setSelected(true);
+            sizeSetChecks.put(size, box);
+            sizeSetPane.getChildren().add(box);
+        }
+    }
+
+    private String resolveVariantSize() {
+        if (chkCustomSize.isSelected()) {
+            return txtVarSizeCustom.getText().trim();
+        }
+        ClothingSize selected = cmbVarSize.getSelectionModel().getSelectedItem();
+        return selected != null ? selected.name() : "";
+    }
+
+    private void setVariantSize(String size) {
+        ClothingSize clothingSize = ClothingSize.fromValue(size);
+        if (clothingSize != null) {
+            chkCustomSize.setSelected(false);
+            cmbVarSize.getSelectionModel().select(clothingSize);
+        } else if (size != null && !size.isBlank()) {
+            chkCustomSize.setSelected(true);
+            txtVarSizeCustom.setText(size);
+        } else {
+            chkCustomSize.setSelected(false);
+            cmbVarSize.getSelectionModel().clearSelection();
+            txtVarSizeCustom.clear();
+        }
     }
 
     private javafx.util.StringConverter<CategoryDto> categoryConverter() {
@@ -184,8 +241,10 @@ public class ProductController implements Initializable {
         txtId.setText(String.valueOf(product.getId()));
         txtName.setText(product.getProductName());
         txtDescription.setText(product.getDescription() != null ? product.getDescription() : "");
-        txtImagePath.setText(product.getImagePath() != null ? product.getImagePath() : "");
-        imgPreview.setImage(ImageUtil.getProductImage(product.getImagePath()));
+        storedImagePath = product.getImagePath();
+        pendingImageFile = null;
+        txtImagePath.setText(storedImagePath != null ? storedImagePath : "");
+        imgPreview.setImage(ImageUtil.getProductImage(storedImagePath));
         selectedSupplierId = product.getSupplierId();
         txtSupplier.setText(product.getSupplierName() != null ? product.getSupplierName() : "");
         if (product.getCategoryId() != null) {
@@ -197,7 +256,7 @@ public class ProductController implements Initializable {
     private void setSelectedVariant(ProductVariantDto v) {
         txtVarId.setText(String.valueOf(v.getVariantId()));
         txtVarSku.setText(v.getSku() != null ? v.getSku() : "");
-        txtVarSize.setText(v.getSize() != null ? v.getSize() : "");
+        setVariantSize(v.getSize());
         txtVarColor.setText(v.getColor() != null ? v.getColor() : "");
         txtVarPrice.setText(String.valueOf(v.getPrice()));
         txtVarQty.setText(String.valueOf(v.getQtyOnHand()));
@@ -206,9 +265,20 @@ public class ProductController implements Initializable {
 
     @FXML void btnAddProduct(ActionEvent event) {
         try {
-            int productId = productService.addProduct(buildProductDto(null));
+            ProductDto dto = buildProductDto(null);
+            dto.setImagePath(null);
+            int productId = productService.addProduct(dto);
+            String imagePath = persistProductImage(productId);
+            if (imagePath != null) {
+                dto.setId(productId);
+                dto.setImagePath(imagePath);
+                productService.editProduct(dto);
+            }
             loadAllProducts();
             FormFieldUtil.showGeneratedId(txtId, productId);
+            storedImagePath = imagePath;
+            pendingImageFile = null;
+            txtImagePath.setText(imagePath != null ? imagePath : "");
             clearProductFieldsKeepId();
             AlertUtil.showInfo("Success", "Product added (ID: " + productId + "). Add variants below.");
         } catch (Exception e) { AlertUtil.showError("Error", e.getMessage()); }
@@ -217,7 +287,17 @@ public class ProductController implements Initializable {
     @FXML void btnUpdateProduct(ActionEvent event) {
         try {
             if (!FormFieldUtil.hasId(txtId)) { AlertUtil.showWarning("Update", "Select a product."); return; }
-            productService.editProduct(buildProductDto(FormFieldUtil.parseId(txtId)));
+            int productId = FormFieldUtil.parseId(txtId);
+            String imagePath = persistProductImage(productId);
+            if (imagePath == null) {
+                imagePath = storedImagePath;
+            }
+            ProductDto dto = buildProductDto(productId);
+            dto.setImagePath(imagePath);
+            productService.editProduct(dto);
+            storedImagePath = imagePath;
+            pendingImageFile = null;
+            txtImagePath.setText(imagePath != null ? imagePath : "");
             loadAllProducts();
             AlertUtil.showInfo("Success", "Product updated.");
         } catch (Exception e) { AlertUtil.showError("Error", e.getMessage()); }
@@ -282,6 +362,41 @@ public class ProductController implements Initializable {
         } catch (Exception e) { AlertUtil.showError("Error", e.getMessage()); }
     }
 
+    @FXML void btnAddSizeSet(ActionEvent event) {
+        try {
+            if (!FormFieldUtil.hasId(txtId)) {
+                AlertUtil.showWarning("Size Set", "Select or add a product first.");
+                return;
+            }
+            List<ClothingSize> sizes = new ArrayList<>();
+            for (Map.Entry<ClothingSize, CheckBox> entry : sizeSetChecks.entrySet()) {
+                if (entry.getValue().isSelected()) {
+                    sizes.add(entry.getKey());
+                }
+            }
+            if (sizes.isEmpty()) {
+                AlertUtil.showWarning("Size Set", "Select at least one size.");
+                return;
+            }
+            double price = Double.parseDouble(txtVarPrice.getText().trim());
+            int qty = Integer.parseInt(txtVarQty.getText().trim());
+            int productId = FormFieldUtil.parseId(txtId);
+            int created = variantService.addVariantsForSizes(
+                    productId,
+                    txtVarSku.getText().trim(),
+                    txtVarColor.getText().trim(),
+                    price,
+                    qty,
+                    sizes
+            );
+            loadVariants(productId);
+            loadAllProducts();
+            AlertUtil.showInfo("Success", created + " variant(s) added.");
+        } catch (Exception e) {
+            AlertUtil.showError("Error", e.getMessage());
+        }
+    }
+
     @FXML void btnClear(ActionEvent event) { clearProductFields(); clearVariantFields(); variants.clear(); loadAllProducts(); }
 
     @FXML void btnSearch(ActionEvent event) {
@@ -296,9 +411,10 @@ public class ProductController implements Initializable {
     @FXML void btnBrowseImage(ActionEvent event) {
         FileChooser chooser = new FileChooser();
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg"));
-        var file = chooser.showOpenDialog(txtName.getScene().getWindow());
+        File file = chooser.showOpenDialog(txtName.getScene().getWindow());
         if (file != null) {
-            txtImagePath.setText(file.getAbsolutePath());
+            pendingImageFile = file;
+            txtImagePath.setText(file.getName() + " (pending upload)");
             imgPreview.setImage(ImageUtil.getProductImage(file.getAbsolutePath()));
         }
     }
@@ -323,10 +439,20 @@ public class ProductController implements Initializable {
         dto.setId(id);
         dto.setProductName(txtName.getText().trim());
         dto.setDescription(txtDescription.getText().trim());
-        dto.setImagePath(txtImagePath.getText().isBlank() ? null : txtImagePath.getText().trim());
+        dto.setImagePath(storedImagePath);
         dto.setCategoryId(category != null ? category.getId() : null);
         dto.setSupplierId(selectedSupplierId);
         return dto;
+    }
+
+    private String persistProductImage(int productId) throws Exception {
+        if (pendingImageFile != null) {
+            if (storedImagePath != null && storedImagePath.startsWith("products/")) {
+                imageStorage.deleteStoredImage(storedImagePath);
+            }
+            return imageStorage.saveProductImage(pendingImageFile, productId);
+        }
+        return null;
     }
 
     private ProductVariantDto buildVariantDto(Integer variantId, Integer productId) {
@@ -334,7 +460,7 @@ public class ProductController implements Initializable {
         dto.setVariantId(variantId);
         dto.setProductId(productId);
         dto.setSku(txtVarSku.getText().trim());
-        dto.setSize(txtVarSize.getText().trim());
+        dto.setSize(resolveVariantSize());
         dto.setColor(txtVarColor.getText().trim());
         dto.setBarcode(txtVarBarcode.getText().isBlank() ? null : txtVarBarcode.getText().trim());
         dto.setPrice(Double.valueOf(txtVarPrice.getText()));
@@ -349,7 +475,10 @@ public class ProductController implements Initializable {
     }
 
     private void clearProductFieldsKeepId() {
-        txtName.clear(); txtDescription.clear(); txtImagePath.clear();
+        txtName.clear(); txtDescription.clear();
+        txtImagePath.clear();
+        storedImagePath = null;
+        pendingImageFile = null;
         imgPreview.setImage(ImageUtil.getProductImage(null));
         txtSupplier.clear(); cmbCategory.getSelectionModel().clearSelection();
         selectedSupplierId = null;
@@ -361,7 +490,11 @@ public class ProductController implements Initializable {
     }
 
     private void clearVariantFieldsKeepId() {
-        txtVarSku.clear(); txtVarSize.clear(); txtVarColor.clear();
+        txtVarSku.clear();
+        chkCustomSize.setSelected(false);
+        cmbVarSize.getSelectionModel().select(ClothingSize.M);
+        txtVarSizeCustom.clear();
+        txtVarColor.clear();
         txtVarPrice.clear(); txtVarQty.clear(); txtVarBarcode.clear();
     }
 }

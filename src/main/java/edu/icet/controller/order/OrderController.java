@@ -2,8 +2,10 @@ package edu.icet.controller.order;
 
 import edu.icet.config.AppConfig;
 import edu.icet.config.SessionManager;
+import edu.icet.factory.DesktopServiceFactory;
 import edu.icet.factory.ServiceFactory;
 import edu.icet.model.dto.*;
+import edu.icet.model.enums.ClothingSize;
 import edu.icet.model.enums.PaymentMethod;
 import edu.icet.service.*;
 import edu.icet.util.*;
@@ -27,7 +29,9 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class OrderController implements Initializable {
@@ -39,11 +43,11 @@ public class OrderController implements Initializable {
     private final CustomerService customerService = ServiceFactory.getInstance().getCustomerService();
     private final DiscountService discountService = ServiceFactory.getInstance().getDiscountService();
     private final OrderService orderService = ServiceFactory.getInstance().getOrderService();
-    private final JasperReportService jasperReportService = ServiceFactory.getInstance().getJasperReportService();
+    private final JasperReportService jasperReportService = DesktopServiceFactory.getInstance().getJasperReportService();
 
     private final ObservableList<CartItemDto> cartItems = FXCollections.observableArrayList();
     private List<ProductVariantDto> allVariants;
-    private List<ProductVariantDto> displayedVariants = List.of();
+    private List<ProductGroupDto> displayedProducts = List.of();
     private final List<VBox> productCards = new ArrayList<>();
     private int selectedCardIndex = -1;
     private Integer selectedCategoryId;
@@ -99,9 +103,9 @@ public class OrderController implements Initializable {
             updateTotals();
             updateCartEmptyState();
         });
-        txtSearch.textProperty().addListener((o, a, b) -> renderProducts(filterVariants()));
+        txtSearch.textProperty().addListener((o, a, b) -> renderProducts(filterAndGroupProducts()));
         txtSearch.setOnAction(e -> {
-            if (!displayedVariants.isEmpty()) selectCard(0);
+            if (!displayedProducts.isEmpty()) selectCard(0);
         });
         updateTotals();
         updateCartEmptyState();
@@ -148,7 +152,7 @@ public class OrderController implements Initializable {
             else if (e.getCode() == KeyCode.DELETE) { btnRemoveFromCart(null); e.consume(); }
             else if (e.getCode() == KeyCode.ESCAPE) { btnClearCart(null); e.consume(); }
             else if (e.getCode() == KeyCode.ENTER) {
-                if (txtSearch.isFocused() && displayedVariants.isEmpty()) return;
+                if (txtSearch.isFocused() && displayedProducts.isEmpty()) return;
                 addSelectedProductToCart();
                 e.consume();
             }
@@ -162,7 +166,7 @@ public class OrderController implements Initializable {
     }
 
     private void moveSelection(int dx, int dy) {
-        if (displayedVariants.isEmpty()) return;
+        if (displayedProducts.isEmpty()) return;
         int cols = Math.max(1, productGrid.getPrefColumns());
         if (selectedCardIndex < 0) {
             selectCard(0);
@@ -175,8 +179,8 @@ public class OrderController implements Initializable {
         if (col < 0) col = 0;
         if (row < 0) row = 0;
         int newIndex = row * cols + col;
-        if (newIndex >= displayedVariants.size()) {
-            newIndex = displayedVariants.size() - 1;
+        if (newIndex >= displayedProducts.size()) {
+            newIndex = displayedProducts.size() - 1;
         }
         selectCard(newIndex);
     }
@@ -193,12 +197,10 @@ public class OrderController implements Initializable {
     }
 
     private void addSelectedProductToCart() {
-        if (selectedCardIndex >= 0 && selectedCardIndex < displayedVariants.size()) {
-            ProductVariantDto v = displayedVariants.get(selectedCardIndex);
-            if (v.getQtyOnHand() > 0) addToCart(v, 1);
-        } else if (!displayedVariants.isEmpty()) {
-            ProductVariantDto v = displayedVariants.get(0);
-            if (v.getQtyOnHand() > 0) addToCart(v, 1);
+        if (selectedCardIndex >= 0 && selectedCardIndex < displayedProducts.size()) {
+            openSizePicker(displayedProducts.get(selectedCardIndex));
+        } else if (!displayedProducts.isEmpty()) {
+            openSizePicker(displayedProducts.get(0));
         }
     }
 
@@ -251,8 +253,8 @@ public class OrderController implements Initializable {
                 if (empty || item == null) {
                     setGraphic(null);
                 } else {
-                    lblName.setText(item.getDisplayName());
-                    lblMeta.setText(String.format("Qty %d × Rs. %.2f", item.getQty(), item.getUnitPrice()));
+                    lblName.setText(item.getProductName() != null ? item.getProductName() : "");
+                    lblMeta.setText(formatCartMeta(item));
                     lblLineTotal.setText(String.format("Rs. %.2f", item.getLineTotal()));
                     setGraphic(row);
                 }
@@ -278,7 +280,7 @@ public class OrderController implements Initializable {
         return allVariants.stream().filter(v -> v.getVariantId().equals(variantId)).findFirst().orElse(null);
     }
 
-    @FXML void btnSearch(ActionEvent event) { renderProducts(filterVariants()); }
+    @FXML void btnSearch(ActionEvent event) { renderProducts(filterAndGroupProducts()); }
 
     @FXML void btnRemoveFromCart(ActionEvent event) {
         CartItemDto selected = lstCart.getSelectionModel().getSelectedItem();
@@ -408,14 +410,14 @@ public class OrderController implements Initializable {
                 if (n instanceof Button b) b.getStyleClass().remove("category-btn-selected");
             });
             btn.getStyleClass().add("category-btn-selected");
-            renderProducts(filterVariants());
+            renderProducts(filterAndGroupProducts());
         });
         return btn;
     }
 
     private void loadVariants() {
         allVariants = variantService.getAllActiveVariants();
-        renderProducts(filterVariants());
+        renderProducts(filterAndGroupProducts());
     }
 
     private List<ProductVariantDto> filterVariants() {
@@ -429,32 +431,51 @@ public class OrderController implements Initializable {
                 .toList();
     }
 
-    private void renderProducts(List<ProductVariantDto> variants) {
-        displayedVariants = variants;
+    private List<ProductGroupDto> filterAndGroupProducts() {
+        Map<Integer, List<ProductVariantDto>> byProduct = new LinkedHashMap<>();
+        for (ProductVariantDto variant : filterVariants()) {
+            byProduct.computeIfAbsent(variant.getProductId(), id -> new ArrayList<>()).add(variant);
+        }
+        List<ProductGroupDto> groups = new ArrayList<>();
+        for (Map.Entry<Integer, List<ProductVariantDto>> entry : byProduct.entrySet()) {
+            groups.add(ProductGroupDto.fromVariants(entry.getKey(), entry.getValue()));
+        }
+        return groups;
+    }
+
+    private void renderProducts(List<ProductGroupDto> products) {
+        displayedProducts = products;
         productGrid.getChildren().clear();
         productCards.clear();
         selectedCardIndex = -1;
-        for (ProductVariantDto v : variants) {
-            VBox card = createProductCard(v);
+        for (ProductGroupDto group : products) {
+            VBox card = createProductCard(group);
             productCards.add(card);
             productGrid.getChildren().add(card);
         }
-        if (!variants.isEmpty()) selectCard(0);
+        if (!products.isEmpty()) selectCard(0);
     }
 
-    private VBox createProductCard(ProductVariantDto variant) {
+    private VBox createProductCard(ProductGroupDto group) {
         VBox card = new VBox(6);
         card.getStyleClass().add("product-card");
         card.setAlignment(Pos.TOP_CENTER);
         card.setPrefWidth(CARD_WIDTH - 10);
 
-        ImageView image = new ImageView(ImageUtil.getProductImage(variant.getImagePath(), 140, 120));
+        ImageView image = new ImageView(ImageUtil.getProductImage(group.getImagePath(), 140, 120));
         image.setFitWidth(130); image.setFitHeight(110); image.setPreserveRatio(true);
         StackPane imageFrame = new StackPane(image);
         imageFrame.getStyleClass().add("product-image-frame");
         imageFrame.setMinSize(140, 120);
 
-        if (variant.getQtyOnHand() <= 0) {
+        if (group.hasMultipleVariants()) {
+            Label variationBadge = new Label("⧉");
+            variationBadge.getStyleClass().add("product-variation-badge");
+            imageFrame.getChildren().add(variationBadge);
+            StackPane.setAlignment(variationBadge, Pos.TOP_RIGHT);
+        }
+
+        if (group.isFullyOutOfStock()) {
             card.getStyleClass().add("product-card-out-of-stock");
             Label overlay = new Label("Out Of Stock");
             overlay.getStyleClass().add("out-of-stock-overlay");
@@ -462,34 +483,66 @@ public class OrderController implements Initializable {
             StackPane.setAlignment(overlay, Pos.BOTTOM_CENTER);
         }
 
-        Label name = new Label(variant.getProductName());
+        Label name = new Label(group.getProductName());
         name.getStyleClass().add("product-card-name");
         name.setWrapText(true); name.setMaxWidth(CARD_WIDTH - 24);
 
-        String sizeColor = "";
-        if (variant.getSize() != null) sizeColor = "Size: " + variant.getSize();
-        if (variant.getColor() != null) sizeColor += (sizeColor.isEmpty() ? "" : " / ") + variant.getColor();
-        Label meta = new Label(sizeColor);
-        meta.getStyleClass().add("cart-item-meta");
-
-        Label price = new Label(String.format("Rs. %.2f", variant.getPrice()));
+        Label price = new Label(group.getPriceLabel());
         price.getStyleClass().add("product-card-price");
 
-        Label stock = new Label("Stock: " + variant.getQtyOnHand());
-        stock.getStyleClass().add(variant.getQtyOnHand() <= 0 ? "badge-out-of-stock"
-                : variant.getQtyOnHand() <= AppConfig.getLowStockThreshold() ? "badge-low-stock" : "badge-in-stock");
+        int stock = group.getTotalStock();
+        Label stockLabel = new Label("Stock: " + stock);
+        stockLabel.getStyleClass().add(stock <= 0 ? "badge-out-of-stock"
+                : stock <= AppConfig.getLowStockThreshold() ? "badge-low-stock" : "badge-in-stock");
 
-        card.getChildren().addAll(imageFrame, name, meta, price, stock);
-        if (variant.getQtyOnHand() > 0) {
+        card.getChildren().addAll(imageFrame, name, price, stockLabel);
+        if (!group.isFullyOutOfStock()) {
             card.setOnMouseClicked(e -> {
                 int idx = productCards.indexOf(card);
                 if (idx >= 0) selectCard(idx);
-                addToCart(variant, 1);
+                openSizePicker(group);
             });
             card.setStyle("-fx-cursor: hand;");
             UiEffects.applyHoverScale(card);
         }
         return card;
+    }
+
+    private void openSizePicker(ProductGroupDto group) {
+        if (group.isFullyOutOfStock()) {
+            return;
+        }
+        if (group.getVariants().size() == 1) {
+            ProductVariantDto variant = group.getFirstInStockVariant();
+            if (variant != null) {
+                addToCart(variant, 1);
+            }
+            return;
+        }
+        SizePickerDialogController picker = NavigationUtil.openModalWindow(
+                "/view/Size_Picker_Dialog.fxml",
+                "Select Size",
+                controller -> controller.setProductGroup(group));
+        if (picker != null && picker.isConfirmed() && picker.getSelectedVariant() != null) {
+            addToCart(picker.getSelectedVariant(), 1);
+        }
+    }
+
+    private String formatCartMeta(CartItemDto item) {
+        StringBuilder meta = new StringBuilder();
+        ClothingSize clothingSize = ClothingSize.fromValue(item.getSize());
+        if (clothingSize != null) {
+            meta.append(clothingSize.getLabel());
+        } else if (item.getSize() != null && !item.getSize().isBlank()) {
+            meta.append(item.getSize());
+        }
+        if (item.getColor() != null && !item.getColor().isBlank()) {
+            if (!meta.isEmpty()) meta.append(" · ");
+            meta.append(item.getColor());
+        }
+        if (!meta.isEmpty()) meta.append(" · ");
+        meta.append(String.format("Qty %d × Rs. %.2f", item.getQty(), item.getUnitPrice()));
+        return meta.toString();
     }
 
     private void addToCart(ProductVariantDto variant, int qty) {

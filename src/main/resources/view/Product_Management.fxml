@@ -24,7 +24,9 @@
 
 <?import javafx.scene.layout.HBox?>
 
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.CheckBox?>
+
+<?import javafx.scene.layout.FlowPane?>
 
 
 
@@ -94,11 +96,23 @@
 
                   <HBox spacing="8.0">
 
-                     <TextField fx:id="txtVarSku" HBox.hgrow="ALWAYS" promptText="SKU" styleClass="modern-input" />
+                     <TextField fx:id="txtVarSku" HBox.hgrow="ALWAYS" promptText="SKU prefix" styleClass="modern-input" />
 
-                     <TextField fx:id="txtVarSize" prefWidth="70.0" promptText="Size" styleClass="modern-input" />
+                     <ComboBox fx:id="cmbVarSize" prefWidth="90.0" promptText="Size" styleClass="modern-input" />
 
                   </HBox>
+
+                  <HBox spacing="8.0">
+
+                     <CheckBox fx:id="chkCustomSize" text="Custom size" />
+
+                     <TextField fx:id="txtVarSizeCustom" HBox.hgrow="ALWAYS" managed="false" promptText="e.g. 30, 32" styleClass="modern-input" visible="false" />
+
+                  </HBox>
+
+                  <FlowPane fx:id="sizeSetPane" hgap="8.0" vgap="4.0" />
+
+                  <Button maxWidth="Infinity" onAction="#btnAddSizeSet" styleClass="info-btn" text="Add Size Set (selected sizes)" />
 
                   <TextField fx:id="txtVarColor" promptText="Color" styleClass="modern-input" />
 

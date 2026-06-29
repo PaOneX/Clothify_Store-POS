@@ -1,6 +1,7 @@
 package edu.icet.controller.order;
 
 import edu.icet.config.AppConfig;
+import edu.icet.factory.DesktopServiceFactory;
 import edu.icet.factory.ServiceFactory;
 import edu.icet.model.dto.InvoiceDto;
 import edu.icet.model.dto.OrderItemDto;
@@ -23,7 +24,7 @@ import java.util.ResourceBundle;
 
 public class InvoicePreviewController implements Initializable {
 
-    private final JasperReportService jasperReportService = ServiceFactory.getInstance().getJasperReportService();
+    private final JasperReportService jasperReportService = DesktopServiceFactory.getInstance().getJasperReportService();
     private InvoiceDto currentInvoice;
 
     @FXML private Label lblStoreName;

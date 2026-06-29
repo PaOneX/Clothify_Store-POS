@@ -1,9 +1,13 @@
 package edu.icet.util;
 
+import edu.icet.config.AppConfig;
+import edu.icet.service.ImageStorageService;
 import javafx.scene.image.Image;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class ImageUtil {
 
@@ -21,6 +25,10 @@ public final class ImageUtil {
     public static Image getProductImage(String imagePath, double width, double height) {
         if (imagePath != null && !imagePath.isBlank()) {
             Image image = loadFromClasspath(imagePath, width, height);
+            if (image != null) {
+                return image;
+            }
+            image = loadFromUploads(imagePath, width, height);
             if (image != null) {
                 return image;
             }
@@ -50,6 +58,19 @@ public final class ImageUtil {
                 }
             } catch (Exception ignored) {
             }
+        }
+        return null;
+    }
+
+    private static Image loadFromUploads(String relativePath, double width, double height) {
+        try {
+            Path stored = ImageStorageService.getInstance().resolveStoredPath(relativePath);
+            if (stored != null && Files.isRegularFile(stored)) {
+                try (InputStream in = Files.newInputStream(stored)) {
+                    return new Image(in, width, height, true, true);
+                }
+            }
+        } catch (Exception ignored) {
         }
         return null;
     }
